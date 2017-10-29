@@ -1,0 +1,55 @@
+extends layout
+block content
+    .row
+        .col-md-12
+            .control-container
+                button.btn.btn-primary New Portfolio
+                a.btn.btn-primary(style='margin-left:10px;', href='/e24') E24 Data
+    .row
+        .col-md-12
+            h4 Portfolios
+            for portfolio in portfolios
+                table.table
+                    thead
+                        tr
+                            th
+                                a(href='/portfolio_overview/#{portfolio.portfolio_name}') #{portfolio.portfolio_name}
+                            th Ticker/nafn
+                            th Upphaflegt virði(NOK)
+                            th Núvirði(NOK)
+                            th Breyting(%)
+                            th Breyting(NOK)
+                        tbody
+                            tr
+                            for holding in portfolio.holdings
+                                tr
+                                    td= holding.bought_at_date
+                                    td
+                                        if typeof(holding.ticker) !== "undefined"
+                                            a(href='https://www.dn.no/finans/#/detaljer/#{holding.ticker}', target='_blank') #{holding.ticker}
+                                        else
+                                            a(href='https://www.nordnet.no/mux/web/fonder/fondfakta.html?classid=#{holding.classid}', target='_blank') #{holding.long_name}
+                                    td #{holding.value.formatMoney(0,'','.')}
+                                    if holding.percentageChange > 0
+                                        td.success #{holding.new_value.formatMoney(0,'','.')}
+                                    else if holding.percentageChange < 0
+                                        td.danger #{holding.new_value.formatMoney(0,'','.')}
+                                    else
+                                        td #{holding.new_value.formatMoney(0,'','.')}
+                                    if holding.percentageChange > 0
+                                        td.success #{holding.percentageChange}
+                                    else if holding.percentageChange < 0
+                                        td.danger #{holding.percentageChange}
+                                    else
+                                        td #{holding.percentageChange}                        
+                                    td #{holding.gain_loss.formatMoney(0,'','.')}
+                                    td
+                                        button.btn.btn-warning.sell-holding-btn(data-id=holding.holding_id) Sell
+                            tr
+                                td 
+                                    b Samtals
+                                    td
+                                    td
+                                    td= portfolio.total_value_before_return.formatMoney(0,'','.')
+                                    td= portfolio.total_return_perc
+                                    td= portfolio.total_gain_loss.formatMoney(0,'','.')

@@ -1,0 +1,37 @@
+extends ../investing_overview
+block subview
+    .row
+        .col-md-9
+            h4.greeting-header Porteføljer
+        .col-md-3
+            .form-group
+                select.form-control
+                    option Portefølje 1
+                    option Portefølje 2
+                    option Portefølje 3
+    .container.inner-overview-container
+        .row.portfolio-details-graphs-container
+            .col-md-12
+                canvas#projection-line-graph(width='600', height='200')
+        .row.holdings-overview
+            table.table.holdings-overview-table
+                thead
+                    tr
+                        th Verdipapir
+                        th Target vekt
+                        th Faktisk vekt
+                        th Total årlige kostnader
+                tbody
+                for holding in portfolio.holdings
+                    tr
+                        td=holding.long_name
+                        td=holding.holding_ratio*100+"%"
+                        td 25%
+                        td=holding.total_yearly_fee*100+"%"
+                tr
+                    td
+                    td
+                    td
+                    td= (portfolio.total_yearly_fee*100).toFixed(3)+"%"
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js')
+    script(type='text/javascript', src='/javascripts/app/portfolio_details_subview.js')

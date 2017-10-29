@@ -1,0 +1,17 @@
+navbar.top-nav-fixed.navbar
+    .navbar-brand.main-logo-inner-nav AutoVest
+    ul.navbar-nav
+        li.nav-item
+            a.nav-link(href='#') Sette inn penger
+        li.nav-item
+            a.nav-link(href='#') Kunderservice
+        li.nav-item.dropdown
+            a.nav-link.dropdown-toggle#user-dropdown-link(href='#', role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false")= session.email
+            .dropdown-menu(aria-labelledby='user-dropdown-link')
+                a.dropdown-item 
+                    .fa.fa-cog.mr10
+                    span Innstillinger
+                .dropdown-divider
+                a.dropdown-item 
+                    .fa.fa-sign-out.mr10
+                    span Logge ut

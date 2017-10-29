@@ -1,0 +1,42 @@
+extends layout
+block content
+    .row
+        .col-md-2.col-md-offset-1
+            h4 Choose portfolio
+        .col-md-2
+            h6 Current Balance
+            h5.current-balance
+        .col-md-2
+            h4 test
+        .col-md-2
+            h4 test
+        .col-md-2
+            h4 test
+    .row
+        .col-md-10.col-md-offset-1
+            h4 Din portfolio
+            .row
+                .col-md-7#table-container(data-portfolio=portfolio_json)
+                    table.table
+                        thead
+                            tr
+                                th Asset class
+                                th Investment
+                                th Percentage
+                                th Amount
+                        tbody
+                        for holding in portfolio.holdings
+                            tr
+                                td Norske aksjer
+                                td= holding.ticker
+                                td= holding.holding_ratio*100+"%"
+                                td= holding.value.formatMoney(0,"",".")
+                .col-md-5#cake-portfolio-container
+                    h4 cake
+            .row
+                .col-md-8#linear-graph-portfolio
+                    h4 Graf
+                .col-md-4#column-last-12-months
+                    h4 Laster graf...
+    script(src="https://code.highcharts.com/highcharts.js")
+    script(src="/javascripts/portfolio_overview.js")

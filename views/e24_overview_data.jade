@@ -1,0 +1,30 @@
+extends layout
+block content
+    .col-md-12
+        table.table.e24-stock-table
+            thead
+                tr
+                    th Data from E24
+                    td ticker
+                    td P/S 17
+                    td P/S 18
+                    td P/E 17
+                    td P/E 18
+                    td Return on capital 17
+                    td Return on capital 18
+                    td Target 18
+            tbody
+            for stock in stocks
+                tr
+                    td= stock.company_name
+                    td
+                        a(href='https://www.dn.no/finans/#/detaljer/#{stock.ticker}', target='blank_') #{stock.ticker}
+                    td= stock.price_to_sales_17
+                    td= stock.price_to_sales_18
+                    td= stock.price_to_earnings_17
+                    td= stock.price_to_earnings_17
+                    td= stock.return_on_capital_17
+                    td= stock.return_on_capital_18
+                    td= stock.target_18
+                    td
+                        button.btn.btn-success Kaupa

@@ -1,0 +1,19 @@
+extends ../layout
+block content
+    .login-main-container
+        div.main-logo AutoVest
+        h4.login-header.text-center Logg inn
+        .row
+            .col-md-4.mx-auto
+                .login-form-container
+                    form#login-form.form-group
+                        input.form-control.form-control-lg(type='email', name='email')
+                        input.form-control.form-control-lg(type='password', name='password')
+                        button.btn.btn-success.btn-block Logg inn
+                    a.text-center(href='/forgot_password') Glemt passord?
+                    p Ikke registert deg ennå? 
+                    a(href='/registrere') Start her! 
+block url_specific_scripts
+    script(type='text/javascript', src='javascripts/login.js')
+
+
