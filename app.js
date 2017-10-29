@@ -927,6 +927,7 @@ var pushPortHoldings = function(row, temp_portfolio_holder){
     
     var obj = {
         bought_at_date: row.bought_at_date,
+        type: row.type,
         holding_ratio: row.holding_ratio,
         holding_id: row.holding_id,
         long_name: row.long_name,
@@ -1330,18 +1331,17 @@ app.get('/app/portfolios', checkIfLoggedIn, function(req, res){
             // Høy
             // moderat
             // lav 
-        // hash / nafn til ad finna svo portolfioid til ad kafa dypra i thad
 
         /*
             1. Eg tharf buy og hold strategiu - sett 50 thus inn a og fengid forrit sem allocatar i rett til ad balansera, 
-            sett svo onnur 50 thus og gert thad sama
+            sett svo onnur 50 thus og gert thad sama 
             2. Kaupa i odyrum funds til ad halda kostnadi sem laegstum
             3. adrir - setja upp timaramma, ef lengi fara meira i stocks, ef stutt fara meira i konservative med bonds
             4. Setja upp portfolio sidu - kikja  a Betterment siduna sem er mjog flott
         */
 
 
-    connection.query("SELECT portfolio_name, SUM(value) AS capital_invested FROM nn_portfolios WHERE u_hash = ? GROUP BY portfolio_name;SELECT *, DATE_FORMAT(date, '%d-%m-%y') AS bought_at_date FROM nn_portfolios WHERE u_hash = ?;", [req.session.u_hash, req.session.u_hash], function(err, rows, fields){
+    connection.query("SELECT portfolio_name, SUM(value) AS capital_invested FROM nn_portfolios WHERE u_hash = ? GROUP BY portfolio_name;SELECT *, DATE_FORMAT(nn_port.date, '%d-%m-%y') AS bought_at_date FROM nn_portfolios nn_port LEFT JOIN securities_overview s_o ON nn_port.classid = s_o.classid OR nn_port.identifier = s_o.identifier WHERE nn_port.u_hash = ?;", [req.session.u_hash, req.session.u_hash], function(err, rows, fields){
 
         var capital_invested = removeRowDataPacket(rows[0])
         , portfolios = structurizePortfolios(rows[1])
@@ -1360,6 +1360,7 @@ app.get('/app/portfolios', checkIfLoggedIn, function(req, res){
             portfolios.forEach(function(portfolio){
                 calcDailyReturnPortfolio(portfolio)
                 getDatesFromPort(portfolio)
+                getStockRatioHolding(portfolio)
                 extractMonetaryReturnsArr(portfolio)
                 caltulateLatestReturnPerc(portfolio)
                 caltulateLatestReturnMon(portfolio)
@@ -1379,9 +1380,24 @@ var calculateTotalYearlyFees = function(holdings){
     return sum/holdings.length
 }
 
+var getStockRatioHolding = function(portfolio){
+
+    var ratio = 0;
+
+    for (var i = 0; i < portfolio.holdings.length; i++) {
+        console.log(portfolio.holdings[i].type)
+        if(portfolio.holdings[i].type.indexOf("aksje") > -1){
+            ratio += portfolio.holdings[i].holding_ratio
+        }
+    }
+
+    portfolio.stock_holding_ratio = ratio;
+
+}
+
 app.get('/app/portfolios/:portfolio_name', checkIfLoggedIn, function(req, res){
         
-    connection.query("SELECT nn.classid, nn.identifier, holding_ratio, value, so.long_name, type, total_yearly_fee FROM nn_portfolios nn LEFT JOIN securities_overview so ON nn.identifier = so.identifier OR nn.classid = so.classid WHERE nn.portfolio_name = ?", [req.params.portfolio_name], function(err, rows, fields){
+    connection.query("SELECT nn.classid, nn.identifier, holding_ratio, value, so.long_name, type, total_yearly_fee, so.type FROM nn_portfolios nn LEFT JOIN securities_overview so ON nn.identifier = so.identifier OR nn.classid = so.classid WHERE nn.portfolio_name = ?", [req.params.portfolio_name], function(err, rows, fields){
         if(err) throw err;
         else {
             var holdings = removeRowDataPacket(rows)
@@ -1391,6 +1407,8 @@ app.get('/app/portfolios/:portfolio_name', checkIfLoggedIn, function(req, res){
             }
 
             portfolio.total_yearly_fee = calculateTotalYearlyFees(holdings)
+
+            // portfolio.stock_holding_ratio = getStockRatioHolding(portfo)
 
             console.log(portfolio.total_yearly_fee)
 
