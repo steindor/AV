@@ -35,7 +35,7 @@ block subview
                             td.text-muted Forventet verdi om 10 år
                             td 1.345.211
                             td.text-muted Kapitalfordeling
-                            td 90% aksjer
+                            td= (portfolio.stock_holding_ratio*100).toFixed(0)+"% aksjer" 
                         tr
                             td
                             td.text-muted Mål
