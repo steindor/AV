@@ -2,6 +2,7 @@ var Nightmare = require('nightmare');
 var nightmare = Nightmare({ show: false })
 var deferred = require('deferred')
 var Xvfb = require('xvfb')
+var config = require('../config.js')
 var cheerio = require('cheerio')
 var mysql      = require('mysql');
 
@@ -14,12 +15,6 @@ var connection = mysql.createConnection({
   database : 'dn_portfolio',
   multipleStatements: true
 });
-
-
-var NN = {
-    user: "steoell@gmail.com",
-    password: "6HFBt>Vm"
-}
 
 var removeRowDataPacket = function(rows){
     var str = JSON.stringify(rows)
@@ -40,8 +35,8 @@ var getAccountStatus = function(){
             .goto("https://www.nordnet.no/mux/login/start.html?cmpi=start-loggain&state=signin")
             .wait(1000)
             .click(".loginMethods a[class*='button']")
-            .type("input[id='password']", NN.password)
-            .type("input[id='username']", NN.user)
+            .type("input[id='password']", config.nordnet.password)
+            .type("input[id='username']", config.nordnet.user)
             .wait(1000)
             .click(".sign-in-legacy__submit-options__btn [type='submit']")
             .wait(3000)
