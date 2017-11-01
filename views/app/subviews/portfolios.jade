@@ -3,7 +3,7 @@ block subview
     h4.greeting-header Porteføljer
     .container.inner-overview-container
         .row
-            table.table.table.portfolio-overview-table
+            table.table.portfolio-overview-table.borderless
                 thead
                     tr
                         th
@@ -13,7 +13,7 @@ block subview
                             span.text-muted.ml10 NOK
                         th Avkastning
                             span.text-muted.ml10 %
-                        th Risikograd
+                        th Kapitalfordeling
                 tbody
                 for portfolio in portfolios
                     tr.portfolio-overview-row
@@ -22,7 +22,12 @@ block subview
                         td= portfolio.capital_invested.formatMoney(0,"",".")
                         td= portfolio.return_mon.formatMoney(0, "", ".")
                         td= portfolio.return_perc
-                        td 1
+                        td.absolute
+                            .doughnut
+                                .division 
+                                    span.stocks 10
+                                    | |
+                                    span.bonds 90
                     tbody.portfolio-details
                         tr
                             td
@@ -50,74 +55,5 @@ block subview
                                 button.btn.btn-block.btn-outline-info Legge inn penger
                             td 
                                 a(href='/app/portfolios/'+portfolio.portfolio_name).btn.btn-block.btn-outline-primary Detaljer
-
-            //- .col-md-12.portfolio-overview-table
-            //-     .row.portfolio-overview-headers
-            //-         .col-md-1
-            //-         .col-md-2
-            //-             span Kapital
-            //-             span.text-muted.ml10 NOK
-            //-         .col-md-3
-            //-             span Nåværende verdi
-            //-             span.text-muted.ml10 NOK
-            //-         .col-md-3
-            //-             span Avkastning
-            //-             span.text-muted.ml10 %
-            //-         .col-md-1
-            //-             span Risikograd
-            //-         .col-md-2
-            //-     for portfolio in portfolios
-            //-         .row.portfolio-overview-row
-            //-             .col-md-1
-            //-                 span.fa.fa-chevron-right
-            //-             .col-md-2
-            //-                 p= portfolio.capital_invested.formatMoney(0,"",".")
-            //-             .col-md-3
-            //-                 p= portfolio.return_mon.formatMoney(0, "", ".")
-            //-             .col-md-3
-            //-                 p= portfolio.return_perc
-            //-             .col-md-1
-            //-                 p 1
-            //-             .col-md-2
-            //-                 a(href='/app/portfolios/'+portfolio.portfolio_name).btn.btn-block.btn-outline-primary Detaljer
-            //-         .row.portfolio-details.hidden
-            //-             .col-md-3  
-            //-                 p.text-muted Forventet verdi etter 10 år
-            //-                 p.text-muted Inntjening
-            //-                 p.text-muted Mål
-            //-                 p.text-muted År
-            //-             .col-md-3  
-            //-                 p 1.345.342
-            //-                 p= portfolio.dailyMonetaryReturns[portfolio.dailyMonetaryReturns.length - 1].formatMoney(0,"",".")
-            //-                 p 1.500.000
-            //-                 p 10
-            //-             .col-md-3
-            //-                 p.text-muted Auto-deposit
-            //-                 p.text-muted Kapitalfordeling
-            //-                 p.text-muted Drift
-            //-                 button.btn.btn-block.btn-outline-info Legge inn penger
-            //-             .col-md-3
-            //-                 p Off
-            //-                 p 90% aksjer
-            //-                 p 4%
-            //-                 a(href='/app/portfolios/'+portfolio.portfolio_name).btn.btn-block.btn-outline-primary Detaljer
-        //- table.table.table-hover.portfolio-overview-table
-        //-     thead.thead-default
-        //-         tr
-        //-             th Kapital Investert
-        //-                 span.text-muted.ml10 NOK
-        //-             th Nåværende verdi
-        //-                 span.text-muted.ml10 NOK
-        //-             th Avkastning
-        //-                 span.text-muted.ml10 %
-        //-             th Risikograd
-        //-                 .fa.fa-question.text-muted.ml10
-        //-     tbody
-        //-         for portfolio in portfolios
-        //-             tr(data-portfolio=portfolio.portfolio_name)
-        //-                 td= portfolio.capital_invested.formatMoney(0, "", ".")
-        //-                 td= portfolio.return_mon.formatMoney(0, "", ".")
-        //-                 td= portfolio.return_perc
-        //-                 td 1
     //- script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js')
     script(type='text/javascript', src='/javascripts/app/portfolios_overview_subview.js')

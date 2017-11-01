@@ -640,8 +640,6 @@ var func = function(){
 
     var date = moment().format("YYMMDD")
     , time = moment().format("HH:mm")
-
-    var date = "171023"
     
     var url = "https://www.dnb.no/portalfront/nedlast/no/markets/analyser-rapporter/norske/anbefalte-aksjer/AA"+date+".pdf"
 
@@ -677,7 +675,7 @@ var func = function(){
                                     getStockRecsFromTXT("/home/ubuntu/forritun/nodejs/e24-stocks/public/data/AA"+date+".txt", function(response){
                                         var stock_recommendations_arr = response.stock_recommendations;
 
-                                        connection.query("SELECT company_name FROM dnb_ukeportfolje_holdings_overview; SELECT company_name, ticker FROM e24_stock_info_complete;", function(err, rows, fields){
+                                        connection.query("SELECT company_name FROM dnb_ukeportfolje_holdings_overview WHERE active = '1'; SELECT company_name, ticker FROM e24_stock_info_complete;", function(err, rows, fields){
                                             if(err) throw err;
                                             else {
                                                 var previous_holdings_arr = []
@@ -1363,6 +1361,8 @@ app.get('/app/portfolios', checkIfLoggedIn, function(req, res){
                 extractMonetaryReturnsArr(portfolio)
                 caltulateLatestReturnPerc(portfolio)
                 caltulateLatestReturnMon(portfolio)
+                calculateCapitalPercentageTarget(portfolio)
+                calculateCapitalPercentageReal(portfolio)
             })
 
             renderTemplate(res, "app/subviews/portfolios", { portfolios:portfolios }, req.session)
@@ -1419,8 +1419,6 @@ app.get('/app/my_overview', function(req, res){
         };
     });
 });
-
-
 
 var getDataForPortfolio = function(portfolio){
     var d = deferred()
@@ -1615,7 +1613,6 @@ var calculatedailyPercentageChange = function(pricePoints, holdings){
                 // classid is null from sql so no need to check for typeof === "undefined"
                 if(pricePoints[a].classid && pricePoints[a].classid === holdings[i].classid){
 
-
                     var percentageChange = (((pricePoints[a].price / holdings[i].price) - 1)*100).toFixed(2);
                     var valueChange = parseFloat(((percentageChange/100)*holdings[i].value).toFixed(2))
                     percentageArr.push({ percentageChange: percentageChange, date: pricePoints[a].date, classid: holdings[i].classid, identifier: undefined, valueChange: valueChange })
@@ -1782,6 +1779,25 @@ var caltulateLatestReturnMon = function(portfolio){
     portfolio.return_mon = portfolio.capital_invested + portfolio.dailyMonetaryReturns[portfolio.dailyMonetaryReturns.length - 1]
 }
 
+var calculateCapitalPercentageTarget = function(portfolio){
+
+    var ratio = 0;
+
+    for (var i = 0; i < portfolio.holdings.length; i++) {
+        if(portfolio.holdings[i].long_name.indexOf("Aksje") > -1){
+            ratio += portfolio.holdings[i].holding_ratio;
+        }
+    }
+    portfolio.stock_holding_ratio = ratio;
+}
+
+var calculateCapitalPercentageReal = function(portfolio){
+    console.log(portfolio)
+    /*
+    vantar inn lokaweight hverjar holdings fyrir sig...
+     */
+}
+
 app.post('/fetch_portfolios_overview', function(req, res){
     
 
@@ -1798,8 +1814,6 @@ app.post('/fetch_portfolios_overview', function(req, res){
                 }
             })
         })
-
-        console.log(capital_invested)
 
         calculateDailyReturnForPortfolios(portfolios).then(function(portfolios){
 

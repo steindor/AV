@@ -250,8 +250,8 @@ a:hover
     margin-bottom 20px
     
 .portfolio-overview-row
-    margin-top 20px
-    margin-bottom 10px
+    line-height 70px
+    font-size 18px
     &:hover
       cursor pointer
       color rgba(1,1,1,0.6)
@@ -278,7 +278,97 @@ a:hover
     -o-transform rotate(90deg)
     -ms-transform rotate(90deg)
     transform rotate(90deg)
-      
+
+
+/*
+  Mini doughnut charts css
+*/
+
+// bg: #545b7a; // background
+// c1: #fa0; // chart color
+// c2: #0af; // active color
+ 
+.doughnut {
+  width: 70px;
+  height: 70px;
+  top: 70px;
+  right: 0;
+  bottom: 0;
+  left: 30px;
+  margin: auto;
+  position: absolute;
+  background: #c45850 -webkit-linear-gradient(left, #c45850 50%, #3e95cd 50%);
+  background: #c45850 linear-gradient(to right, #c45850 50%, #3e95cd 50%);
+  color: #3e95cd;
+  border-radius: 50%;
+}
+
+.division
+  position absolute
+  font-size 14px
+  color gray
+  left 25%
+  width 50%
+  top 0px
+  z-index 1
+
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+  }
+}
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+  }
+}
+@-webkit-keyframes background {
+  50% {
+    background-color: currentColor;
+  }
+}
+@keyframes background {
+  50% {
+    background-color: currentColor;
+  }
+}
+.doughnut::after {
+  content: '';
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  background: white;
+  border-radius: 50%;
+}
+.doughnut::before {
+  content: '';
+  position: absolute;
+  display: block;
+  background-color: inherit;
+  height: 100%;
+  width: 50%;
+  bottom: 0;
+  right: 0;
+  border-radius: 0 100% 100% 0 / 50%;
+  -webkit-transform: rotate(0);
+          transform: rotate(0);
+  -webkit-transform-origin: 0 50%;
+          transform-origin: 0 50%;
+  -webkit-animation: 50s spin infinite linear, 100s background infinite step-end;
+          animation: 50s spin infinite linear, 100s background infinite step-end;
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+  -webkit-animation-delay: inherit;
+          animation-delay: inherit;
+}
+
 /*
   Portfolio details CSS
 */
@@ -296,3 +386,9 @@ a:hover
     
 .ml10
   margin-left 10px
+  
+.borderless td, .borderless th
+    border none
+    
+.absolute
+  position absolute
