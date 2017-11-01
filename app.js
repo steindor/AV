@@ -13,7 +13,7 @@ var crontab = require('node-crontab');
 var Nightmare = require('nightmare');
 var fs = require('fs')
 var dexec = require( 'deferred-exec' );
-// var nordnet = require('./nordnet_files/nordnet_functions.js')
+var nordnet = require('./nordnet_files/get_mon_status_from_account.js')
 var url = require('url')
 var session = require('client-sessions');
 var moment = require('moment')
@@ -380,6 +380,26 @@ var finishInsertingPortfolio = function(){
     })
 
 }
+
+// var getNNAccountStatus = function(){
+//     var exec = require("child_process").exec
+
+//     console.log("running..")
+
+//     var watcher = exec("DEBUG=nightmare xvfb-run -a node nordnet_files/get_mon_status_from_account.js")
+//     .on('error', function(error) {
+//         throw error
+//     })
+//     .on('data', function(data) {
+//         console.log("results: "+data)
+//         var results = process.stdout.write(data.toString());
+//     })
+//     .on('exit', function(data) {
+//         var results = process.stdout.write(data.toString());
+//         console.log(results)
+//         console.log("done")
+//     })
+// }
 
 var insertHolding = function(holding, portfolio){
     var d = deferred();
@@ -1275,13 +1295,16 @@ app.post('/login', function(req, res){
 
 app.get('/app', function(req, res){
     
-    res.render("fullscreen_loading", function(){
+    res.render("fullscreen_loading");
 
-        setTimeout(function(){
-            res.redirect("/app/overview")
-        }, 2000)
+});
+
+app.post('/get_nordnet_account_status', function(req, res){
+    
+    nordnet.getAccountStatus().then(function(results){
+        req.session.account_monetary_status = parseInt(results)
+        res.send({ err: null, done: true })
     })
-
 
 });
 
@@ -1315,7 +1338,7 @@ app.get('/app/nn_portfolios', function(req, res){
 
 app.get('/app/overview', checkIfLoggedIn, function(req, res){
 
-    renderTemplate(res, "app/subviews/overview", {}, req.session)
+        renderTemplate(res, "app/subviews/overview", {}, req.session)
 });
 
 app.get('/app/portfolios', checkIfLoggedIn, function(req, res){

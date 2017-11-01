@@ -4,25 +4,24 @@ block subview
     .container.inner-overview-container
         .row.inner-overview-table
             .col-md-3
-                p.text-muted Total Investert(NOK)
+                p.text-muted Total Investert (NOK)
                 .overview-table-numbers 
                     .fa.fa-spin.fa-cog.fa-2x.cog-loader
                     .number-container
             .col-md-3 
-                p.text-muted Nåværende verdi(NOK)
+                p.text-muted Nåværende verdi (NOK)
                 .overview-table-numbers
                     .fa.fa-spin.fa-cog.fa-2x.cog-loader
                     .number-container
             .col-md-3
-                p.text-muted Total avkastning(%)
+                p.text-muted Total avkastning (%)
                 .overview-table-numbers
                     .fa.fa-spin.fa-cog.fa-2x.cog-loader
                     .number-container
             .col-md-3
-                p.text-muted Midler på konto
+                p.text-muted Midler på konto (NOK)
                 .overview-table-numbers
-                    .fa.fa-spin.fa-cog.fa-2x.cog-loader
-                    .number-container
+                    .number-container= session.account_monetary_status.formatMoney(0,"",".")
         .row
             .col-md-12.overview-graph-container
                 p.text-muted Avkastning per dags dato
